@@ -1,33 +1,46 @@
 package com.girish.contactmanager;
 
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-import android.util.Log;
-
 import com.girish.contactmanager.data.DatabaseHandler;
+import com.girish.contactmanager.databinding.ActivityMainBinding;
 import com.girish.contactmanager.model.Contact;
-import com.girish.contactmanager.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private ActivityMainBinding binding;
+    private ArrayList<String> contactArrayList;
+    private ArrayAdapter<String> contactArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         DatabaseHandler databaseHandler = new DatabaseHandler(this);
-        Contact girish = databaseHandler.getContact(1);
-        databaseHandler.deleteContact(girish);
+
+        contactArrayList = new ArrayList<>();
 
         List<Contact> contactList = databaseHandler.getAllContacts();
         for(Contact contact: contactList){
-            Log.d("MainActivity", contact.getName() + " " + contact.getId());
+            contactArrayList.add(contact.getName());
         }
-        Log.d("MainActivity", String.valueOf(contactList.size()));
+        binding.listView.setOnItemClickListener((parent, view, position, id) -> {
+
+        });
+
+
+        contactArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                contactArrayList);
+        binding.listView.setAdapter(contactArrayAdapter);
+
 
     }
 }
